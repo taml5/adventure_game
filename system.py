@@ -2,6 +2,16 @@
 
 from typing import Optional
 
+DIRECTIONS = {'n', 'e', 's', 'w', 'north', 'east', 'south', 'west'}
+COMMANDS = {'quit': {'quit', 'q'},
+            'move': {'move', 'go', 'walk'}.union(DIRECTIONS),  # shortcuts for directions work as move command
+            'inventory': {'inventory', 'i'},
+            'take': {'take', 'grab'},
+            'interact': {'use'},
+            'unlock': {'unlock'},
+            'inspect': {'inspect', 'examine'},
+            'help': {'help'}
+            }
 
 ################################################################
 # ITEMS
@@ -268,9 +278,8 @@ def quit_game() -> bool:
 
 def game_help() -> None:
     """Provide a list of commands that the player can use and direct them on how to interact with the game."""
-    commands = {'quit', 'move', 'inventory', 'take', 'interact', 'unlock', 'inspect'}
     print('To play the game, input a command into the console: for example, "go north" or "inspect room".')
     print('Available commands:')
-    for command in commands:
+    for command in COMMANDS:
         print(f'    {command}')
     print('')

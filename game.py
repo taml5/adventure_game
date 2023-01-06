@@ -1,24 +1,12 @@
 """This is the main module that runs the game."""
 import system
+from system import DIRECTIONS, COMMANDS
 from data import test_data
 
 # from data import rooms
 # from data import items
 
 player = system.Player(location=test_data.test_room1)
-
-
-# TODO: implement commands that the player can input
-DIRECTIONS = {'n', 'e', 's', 'w', 'north', 'east', 'south', 'west'}
-COMMANDS = {'quit': {'quit', 'q'},
-            'move': {'move', 'go', 'walk'}.union(DIRECTIONS),  # shortcuts for directions work as move command
-            'inventory': {'inventory', 'i'},
-            'take': {'take', 'grab'},
-            'interact': {'use'},
-            'unlock': {'unlock'},
-            'inspect': {'inspect', 'examine'},
-            'help': {'help'}
-            }
 
 
 def game_loop() -> bool:
