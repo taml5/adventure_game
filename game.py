@@ -11,7 +11,7 @@ player = system.Player(location=test_data.test_room1)
 # TODO: implement commands that the player can input
 DIRECTIONS = {'n', 'e', 's', 'w', 'north', 'east', 'south', 'west'}
 COMMANDS = {'quit': {'quit', 'q'},
-            'move': {'move', 'go', 'walk'}.union(DIRECTIONS),
+            'move': {'move', 'go', 'walk'}.union(DIRECTIONS),  # shortcuts for directions work as move command
             'inventory': {'inventory', 'i'},
             'take': {'take', 'grab'},
             'interact': {'use'},
@@ -62,8 +62,7 @@ def game_loop() -> bool:
         player.inspect_item(item_name)
     elif user_input[0] in COMMANDS['help']:
         # TODO: implement solution for helping player
-        ...
-        raise NotImplementedError
+        system.help()
     else:
         print("I don't understand.")
 

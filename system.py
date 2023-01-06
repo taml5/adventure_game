@@ -265,3 +265,13 @@ def quit_game() -> bool:
             return True
         else:
             print('I don\'t understand.')
+
+
+def help() -> None:
+    """Provide a list of commands that the player can use and direct them on how to interact with the game."""
+    commands = {'quit', 'move', 'inventory', 'take', 'interact', 'unlock', 'inspect'}
+    print('To play the game, input a command into the console: for example, "go north" or "inspect room".')
+    print('Available commands:')
+    for command in commands:
+        print(f'    {command}')
+    print('')
