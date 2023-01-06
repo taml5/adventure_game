@@ -62,7 +62,7 @@ def game_loop() -> bool:
         player.inspect_item(item_name)
     elif user_input[0] in COMMANDS['help']:
         # TODO: implement solution for helping player
-        system.help()
+        system.game_help()
     else:
         print("I don't understand.")
 

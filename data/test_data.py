@@ -45,10 +45,12 @@ test_item2 = Item(name='Ruby Pendant',
 test_room1 = Room(name='Test Room',
                   description='This is a test room. There is a key and a chest.',
                   contents={test_key, test_chest},
+                  locked=False
                   )
 test_room2 = Room(name='Secret Room',
                   description='This is another room connected to the main room. '
                               'There is a pendant lying on the floor.',
                   contents={test_item2},
-                  south=test_room1
+                  south=test_room1,
+                  locked=False
                   )

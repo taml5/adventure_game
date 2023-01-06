@@ -104,14 +104,13 @@ class Room(Container):
     south: Optional['Room'] = None
     west: Optional['Room'] = None
 
-    def __init__(self, name: str, description: str, contents: set[Item],
+    def __init__(self, name: str, description: str, contents: set[Item], locked: bool, key: Optional[Item] = None,
                  north: Optional['Room'] = None, east: Optional['Room'] = None, south: Optional['Room'] = None,
                  west: Optional['Room'] = None) -> None:
         """Initialise a new Room instance."""
         self.visited = False
         Container.__init__(self, name=name, keywords=set(), description=description, interactable=False,
-                           portable=False, contents=contents, locked=False, key=None)
-        # TODO: investigate possibility of adding locked rooms
+                           portable=False, contents=contents, locked=locked, key=key)
         self.north = north
         self.east = east
         self.south = south
@@ -267,7 +266,7 @@ def quit_game() -> bool:
             print('I don\'t understand.')
 
 
-def help() -> None:
+def game_help() -> None:
     """Provide a list of commands that the player can use and direct them on how to interact with the game."""
     commands = {'quit', 'move', 'inventory', 'take', 'interact', 'unlock', 'inspect'}
     print('To play the game, input a command into the console: for example, "go north" or "inspect room".')
