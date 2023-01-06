@@ -30,8 +30,7 @@ def game_loop() -> bool:
 
     # respond to user input
     if user_input[0] in COMMANDS['quit']:
-        print('Ending the game... \n')
-        return False
+        return system.quit_game()
     elif user_input[0] in COMMANDS['inventory']:
         player.open_inventory()
     elif user_input[0] in COMMANDS['move']:

@@ -251,3 +251,17 @@ class Player:
 ################################################################
 # TOP-LEVEL FUNCTIONS
 ################################################################
+
+def quit_game() -> bool:
+    """Ask the player if they want to quit or not. If they confirm they want to quit, end the game."""
+    while True:
+        print('Are you sure you want to quit?')
+        user_input = input('> ').lower().strip()
+
+        if user_input == 'yes' or user_input == 'y':
+            print('Ending the game... \n')
+            return False
+        elif user_input == 'no' or user_input == 'n':
+            return True
+        else:
+            print('I don\'t understand.')
