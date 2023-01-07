@@ -18,7 +18,7 @@ def game_loop() -> bool:
 
     # respond to user input
     if user_input[0] in COMMANDS['quit']:
-        if system.quit_game():  # TODO: improve logic
+        if system.game_quit():  # TODO: improve logic
             print(player.location.describe_room())
             return True
 

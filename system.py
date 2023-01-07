@@ -244,7 +244,7 @@ class Player:
 # TOP-LEVEL FUNCTIONS
 ################################################################
 
-def quit_game() -> bool:
+def game_quit() -> bool:
     """Ask the player if they want to quit or not. If they confirm they want to quit, end the game."""
     while True:
         print('Are you sure you want to quit?')
