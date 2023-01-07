@@ -32,9 +32,8 @@ def game_loop() -> bool:
 
         player.move(direction)
     elif user_input[0] in COMMANDS['take']:
-        # TODO: implement solution for taking items from container in room instead just items in the room
         item_name = user_input[1]
-        player.take_item(item_name)
+        print(player.take_item(item_name))
     elif user_input[0] in COMMANDS['interact']:
         # TODO: implement solution for interacting with items
         ...
@@ -44,12 +43,9 @@ def game_loop() -> bool:
         ...
         raise NotImplementedError
     elif user_input[0] in COMMANDS['inspect']:
-        # TODO: implement solution for examining rooms and items
-        ...
         item_name = user_input[1]
-        player.inspect_item(item_name)
+        print(player.inspect_item(item_name))
     elif user_input[0] in COMMANDS['help']:
-        # TODO: implement solution for helping player
         system.game_help()
     else:
         print("I don't understand.")

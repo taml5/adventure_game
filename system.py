@@ -76,18 +76,19 @@ class Container(Item):
             for item in self.contents:
                 print(f'    {item.name}')
 
-    def unlock_container(self, key: Item) -> None:
+    def unlock_container(self, key: Item) -> str:
         """Attempt to unlock the container with the given item. If it is already unlocked, tell the player. If the
         key is correct, unlock the container. Else, tell the player the key doesn't work.
         """
         if not self.locked:
-            print('It doesn\'t seem to be locked.')
+            return 'It doesn\'t seem to be locked.'
         elif key.name == self.key.name:
             self.locked = False
             print(f'The {self.name.lower()} unlocks. \n')
             self.display_contents()
+            return ''
         else:
-            print(f'The key doesn\'t seem to fit.')
+            return f'The key doesn\'t seem to fit.'
 
 
 ################################################################
@@ -175,20 +176,6 @@ class Player:
         for item in self.inventory:
             print(f'    {item.name}')
 
-    def pickup_item(self, item: Item, container: Container) -> None:
-        """Remove an item from a container in the player's location and put it into the player's inventory.
-        If the given item is not in the player's location, then inform the player and do nothing.
-        """
-        if not item.portable:
-            print('You can\'t pick that up!')
-        elif container is self.location or (container in self.location.contents and not container.locked):
-            container.contents.remove(item)
-        else:
-            print('Either it\'s not in the room, or I can\'t understand you.')
-            return None
-
-        self.inventory.add(item)
-
     def unlock_container(self, key: Item, container: Container) -> None:
         """Attempt to unlock a container with a key in the players inventory. If the key is in the player's inventory,
         attempt to unlock the container. If it isn't, tell the player and do nothing.
@@ -218,43 +205,39 @@ class Player:
         if room is None:
             print('You can\'t go that way.')
             return None
-        # TODO: implementation for locked rooms feature
-        # elif room.locked:
-        #   ...
+        elif room.locked:
+            print('That way is locked.')
+            return None
         else:
             self.location = room
 
         self.location.describe_room()
 
-    def take_item(self, item_name: str) -> None:
+    def take_item(self, item_name: str) -> str:
         """Given the name of an item, search for the item in the player's location. If the item is found,
         place it into the player's inventory. If not, then tell the player and do nothing.
         """
         for item in self.location.contents:
             if item_name in item.keywords and item.portable:
                 self.inventory.add(item)
-                print(f'Took {item.name.lower()}.')
-                return None
+                return f'Took {item.name.lower()}.'
             elif item_name in item.keywords and not item.portable:
-                print('You can\'t take that!')
-                return None
+                return 'You can\'t take that!'
 
-        print('I can\'t find that item.')
+        return 'I can\'t find that item.'
 
-    def inspect_item(self, item_name: str) -> None:
+    def inspect_item(self, item_name: str) -> str:
         """Given the name of an item, search for the item in the player's location. If the item is found,
         print the description of the item. If not, then tell the player and do nothing.
         """
         if item_name == self.location.name or item_name == 'room':
-            print(self.location.description)
-            return None
+            return self.location.description
 
         for item in set.union(self.location.contents, self.inventory):
             if item_name in item.keywords:
-                print(item.description)
-                return None
+                return item.description
 
-        print('I can\'t find that item.')
+        return 'I can\'t find that item.'
 
 
 ################################################################
