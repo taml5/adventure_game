@@ -176,16 +176,16 @@ class Player:
         for item in self.inventory:
             print(f'    {item.name}')
 
-    def unlock_container(self, key: Item, container: Container) -> None:
+    def unlock_container(self, key: Item, container: Container) -> str:
         """Attempt to unlock a container with a key in the players inventory. If the key is in the player's inventory,
         attempt to unlock the container. If it isn't, tell the player and do nothing.
         """
         if key in self.inventory:
-            container.unlock_container(key)
             for item in container.contents:
                 self.location.contents.add(item)
+            return container.unlock_container(key)
         else:
-            print('You don\'t have that key!')
+            return 'You don\'t have that key!'
 
     def move(self, direction: str) -> None:
         """Move into a new room: when called, update the location of the player and describe the room."""
