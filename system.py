@@ -138,17 +138,17 @@ class Room(Container):
         if west:
             west.east = self
 
-    def describe_room(self) -> None:
+    def describe_room(self) -> str:
         """Display the name of the place to the player. If the player has not visited the room before, describe it.
         If there are any items in the room, list their names to the player.
         """
         print(f'{self.name}')
 
         if not self.visited:
-            print(f'{self.description} \n')
             self.visited = True
+            return f'{self.description} \n'
         else:
-            print('')
+            return ''
 
 
 ################################################################

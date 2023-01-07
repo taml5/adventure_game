@@ -18,7 +18,11 @@ def game_loop() -> bool:
 
     # respond to user input
     if user_input[0] in COMMANDS['quit']:
-        return system.quit_game()
+        if system.quit_game():  # TODO: improve logic
+            print(player.location.describe_room())
+            return True
+
+        return False
     elif user_input[0] in COMMANDS['inventory']:
         player.open_inventory()
     elif user_input[0] in COMMANDS['move']:
@@ -54,6 +58,6 @@ def game_loop() -> bool:
 
 
 if __name__ == '__main__':
-    player.location.describe_room()
+    print(player.location.describe_room())
     while game_loop():
         pass
