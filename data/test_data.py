@@ -15,12 +15,12 @@ test_key = Item(name='Rusty Key',
                 )
 test_item1 = Item(name='Sword',
                   description='A one-handed sword made of bronze, forged in a bygone era by an ancient '
-                              'civilisation.',
+                              'civilisation. It\'s still sharp.',
                   keywords=set(),
                   portable=True,
                   interactable=True
                   )
-test_chest = Container(name='Rotten Chest',
+test_chest = Container(name='Old Chest',
                        description='The chest is ancient: the wood is rotted and covered in moss.',
                        locked=True,
                        key=test_key,
