@@ -170,6 +170,15 @@ class Player:
         self.location = location
         self.inventory = set()
 
+    def find_item(self, item_name: str) -> Item | None:
+        """Search for an item in the contents of the player's location. If found, return it.
+        Else, return an empty item."""
+        for item in self.location.contents:
+            if item_name in item.keywords:
+                return item
+
+        return None
+
     def open_inventory(self) -> None:
         """Print out a list of items in the player's inventory."""
         print('You have:')
@@ -181,8 +190,7 @@ class Player:
         attempt to unlock the container. If it isn't, tell the player and do nothing.
         """
         if key in self.inventory:
-            for item in container.contents:
-                self.location.contents.add(item)
+            self.location.contents = self.location.contents.union(container.contents)
             return container.unlock_container(key)
         else:
             return 'You don\'t have that key!'
@@ -217,27 +225,29 @@ class Player:
         """Given the name of an item, search for the item in the player's location. If the item is found,
         place it into the player's inventory. If not, then tell the player and do nothing.
         """
-        for item in self.location.contents:
-            if item_name in item.keywords and item.portable:
-                self.inventory.add(item)
-                return f'Took {item.name.lower()}.'
-            elif item_name in item.keywords and not item.portable:
-                return 'You can\'t take that!'
-
-        return 'I can\'t find that item.'
+        item = self.find_item(item_name)
+        if item is None:
+            return 'I can\'t find that item.'
+        elif item in self.inventory:
+            return 'You already have that.'
+        elif item.portable:
+            self.inventory.add(item)
+            return f'Took {item.name.lower()}.'
+        else:
+            return 'You can\'t take that!'
 
     def inspect_item(self, item_name: str) -> str:
         """Given the name of an item, search for the item in the player's location. If the item is found,
         print the description of the item. If not, then tell the player and do nothing.
         """
-        if item_name == self.location.name or item_name == 'room':
+        if item_name in self.location.name.lower() or item_name == 'room':
             return self.location.description
 
-        for item in set.union(self.location.contents, self.inventory):
-            if item_name in item.keywords:
-                return item.description
-
-        return 'I can\'t find that item.'
+        item = self.find_item(item_name)
+        if item is None:
+            return 'I can\'t find that item.'
+        else:
+            return item.description
 
 
 ################################################################

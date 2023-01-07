@@ -9,7 +9,7 @@ from system import Item, Room, Container
 # test_room1
 test_key = Item(name='Rusty Key',
                 description='The key is old and rusted.',
-                keywords={'key'},
+                keywords={'key', 'rusty key'},
                 portable=True,
                 interactable=True
                 )
@@ -43,7 +43,7 @@ test_item2 = Item(name='Ruby Pendant',
 ################################################################
 
 test_room1 = Room(name='Test Room',
-                  description='This is a test room. There is a key and a chest.',
+                  description='This is a test room. There is a rusty key and a chest.',
                   contents={test_key, test_chest},
                   locked=False
                   )
