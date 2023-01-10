@@ -185,7 +185,7 @@ class Player:
         for item in self.inventory:
             print(f'    {item.name}')
 
-    def unlock_container(self, key: Item, container: Container) -> str:
+    def unlock_with_key(self, key: Item, container: Container) -> str:
         """Attempt to unlock a container with a key in the players inventory. If the key is in the player's inventory,
         attempt to unlock the container. If it isn't, tell the player and do nothing.
         """
