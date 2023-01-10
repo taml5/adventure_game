@@ -227,7 +227,7 @@ class Player:
         """
         item = self.find_item(item_name)
         if item is None:
-            return 'I can\'t find that item.'
+            return 'I can\'t find that.'
         elif item in self.inventory:
             return 'You already have that.'
         elif not item.portable:
