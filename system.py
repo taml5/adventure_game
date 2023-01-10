@@ -8,7 +8,7 @@ COMMANDS = {'quit': {'quit', 'q'},
             'inventory': {'inventory', 'i'},
             'take': {'take', 'grab'},
             'interact': {'use'},
-            'unlock': {'unlock'},
+            'unlock': {'unlock', 'open'},
             'inspect': {'inspect', 'examine'},
             'help': {'help'}
             }
