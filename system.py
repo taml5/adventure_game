@@ -10,7 +10,7 @@ COMMANDS = {'quit': {'quit', 'q'},
             'interact': {'use'},
             'unlock': {'unlock', 'open'},
             'inspect': {'inspect', 'examine'},
-            'help': {'help'}
+            'help': {'help', 'h'}
             }
 
 ################################################################
