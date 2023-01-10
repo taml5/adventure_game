@@ -230,11 +230,11 @@ class Player:
             return 'I can\'t find that item.'
         elif item in self.inventory:
             return 'You already have that.'
-        elif item.portable:
+        elif not item.portable:
+            return 'You can\'t take that!'
+        else:
             self.inventory.add(item)
             return f'Took {item.name.lower()}.'
-        else:
-            return 'You can\'t take that!'
 
     def inspect_item(self, item_name: str) -> str:
         """Given the name of an item, search for the item in the player's location. If the item is found,
