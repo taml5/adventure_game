@@ -6,10 +6,10 @@ DIRECTIONS = {'n', 'e', 's', 'w', 'north', 'east', 'south', 'west'}
 COMMANDS = {'quit': {'quit', 'q'},
             'move': {'move', 'go', 'walk'}.union(DIRECTIONS),  # shortcuts for directions work as move command
             'inventory': {'inventory', 'i'},
-            'take': {'take', 'grab'},
+            'take': {'take', 'grab', 'get'},
             'interact': {'use'},
             'unlock': {'unlock', 'open'},
-            'inspect': {'inspect', 'examine'},
+            'inspect': {'inspect', 'examine', 'describe'},
             'help': {'help', 'h'}
             }
 
@@ -52,7 +52,7 @@ class Container(Item):
     locked: Whether the container is locked and requires a key or not.
     key: An Item that, when used with the container, unlocks the container.
     """
-    contents: set[Item]
+    contents: set[Item | 'Container']
     locked: bool
     key: Optional[Item] = None
 
@@ -65,16 +65,22 @@ class Container(Item):
         self.interactable = True
         Item.__init__(self, name, keywords, description, interactable, portable)  # call superclass initialiser
 
-    def display_contents(self) -> None:
+    def display_contents(self) -> str:
         """Print the contents of the container to the player. If there is nothing inside the container,
         tell the player.
         """
-        if not self.contents:  # if self.contents == []
-            print(f'The {self.name.lower()} is empty.')
-        else:
-            print(f'The {self.name.lower()} contains: ')
-            for item in self.contents:
-                print(f'    {item.name}')
+        if not self.contents:
+            return f'{self.description} It is empty.'
+
+        contents_str = f'The {self.name.lower()} contains: \n'
+        for item in self.contents:
+            if isinstance(item, Item):
+                contents_str += f'{item.name} \n'
+            else:  # isinstance(item, Container)
+                contents_str += f'{item.name}'
+                contents_str += item.display_contents()
+
+        return contents_str
 
     def unlock_container(self, key: Item) -> str:
         """Attempt to unlock the container with the given item. If it is already unlocked, tell the player. If the
@@ -109,15 +115,15 @@ class Room(Container):
     description: str
     keywords: set[str]
     visited: bool
-    contents: set[Item]
+    contents: set[Item | Container]
     north: Optional['Room'] = None
     east: Optional['Room'] = None
     south: Optional['Room'] = None
     west: Optional['Room'] = None
 
-    def __init__(self, name: str, description: str, contents: set[Item], locked: bool, key: Optional[Item] = None,
-                 north: Optional['Room'] = None, east: Optional['Room'] = None, south: Optional['Room'] = None,
-                 west: Optional['Room'] = None) -> None:
+    def __init__(self, name: str, description: str, contents: set[Item | Container], locked: bool,
+                 key: Optional[Item] = None, north: Optional['Room'] = None, east: Optional['Room'] = None,
+                 south: Optional['Room'] = None, west: Optional['Room'] = None) -> None:
         """Initialise a new Room instance."""
         self.visited = False
         Container.__init__(self, name=name, keywords=set(), description=description, interactable=False,
@@ -172,12 +178,12 @@ class Player:
 
     def find_item(self, item_name: str) -> Item | None:
         """Search for an item in the contents of the player's location. If found, return it.
-        Else, return an empty item."""
-        for item in self.location.contents:
+        Else, return None."""
+        for item in set.union(self.location.contents, self.inventory):
             if item_name in item.keywords:
                 return item
 
-        return None
+        return
 
     def open_inventory(self) -> None:
         """Print out a list of items in the player's inventory."""
@@ -185,13 +191,16 @@ class Player:
         for item in self.inventory:
             print(f'    {item.name}')
 
-    def unlock_with_key(self, key: Item, container: Container) -> str:
-        """Attempt to unlock a container with a key in the players inventory. If the key is in the player's inventory,
+    def unlock_with_key(self, key: Item, item: Item) -> str:
+        """Attempt to unlock an Item with a key in the players inventory. If the key is in the player's inventory,
         attempt to unlock the container. If it isn't, tell the player and do nothing.
         """
         if key in self.inventory:
-            self.location.contents = self.location.contents.union(container.contents)
-            return container.unlock_container(key)
+            if isinstance(item, Container):
+                self.location.contents = self.location.contents
+                return item.unlock_container(key)
+            else:
+                return 'You can\'t unlock that.'
         else:
             return 'You don\'t have that key!'
 
@@ -208,23 +217,21 @@ class Player:
             room = self.location.west
         else:
             print('I don\'t know what direction that is.')
-            return None
+            return
 
         if room is None:
             print('You can\'t go that way.')
-            return None
         elif room.locked:
             print('That way is locked.')
-            return None
         else:
             self.location = room
-
-        self.location.describe_room()
+            print(self.location.describe_room())
 
     def take_item(self, item_name: str) -> str:
         """Given the name of an item, search for the item in the player's location. If the item is found,
         place it into the player's inventory. If not, then tell the player and do nothing.
         """
+        # TODO: remove item from its container
         item = self.find_item(item_name)
         if item is None:
             return 'I can\'t find that.'
@@ -234,18 +241,24 @@ class Player:
             return 'You can\'t take that!'
         else:
             self.inventory.add(item)
+            self.location.contents.remove(item)
             return f'Took {item.name.lower()}.'
 
     def inspect_item(self, item_name: str) -> str:
         """Given the name of an item, search for the item in the player's location. If the item is found,
         print the description of the item. If not, then tell the player and do nothing.
         """
-        if item_name in self.location.name.lower() or item_name == 'room':
+        if item_name.lower() in self.location.name.lower() or item_name == 'room':
             return self.location.description
 
         item = self.find_item(item_name)
         if item is None:
             return 'I can\'t find that item.'
+        elif isinstance(item, Container):
+            string = f"""
+            {item.description} \n
+            {item.display_contents()}"""
+            return string
         else:
             return item.description
 
@@ -254,7 +267,7 @@ class Player:
 # TOP-LEVEL FUNCTIONS
 ################################################################
 
-def game_quit() -> bool:
+def game_quit(player: Player) -> bool:
     """Ask the player if they want to quit or not. If they confirm they want to quit, end the game."""
     while True:
         print('Are you sure you want to quit?')
@@ -264,6 +277,7 @@ def game_quit() -> bool:
             print('Ending the game... \n')
             return False
         elif user_input == 'no' or user_input == 'n':
+            print(player.location.describe_room())
             return True
         else:
             print('I don\'t understand.')

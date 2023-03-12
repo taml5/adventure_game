@@ -1,8 +1,9 @@
 """This is the main module that runs the game."""
 import system
 from system import DIRECTIONS, COMMANDS
-from data import test_data
 
+
+from data import test_data
 # from data import rooms
 # from data import items
 
@@ -18,11 +19,7 @@ def game_loop() -> bool:
 
     # respond to user input
     if user_input[0] in COMMANDS['quit']:
-        if system.game_quit():  # TODO: improve logic
-            print(player.location.describe_room())
-            return True
-
-        return False
+        return system.game_quit(player)
     elif user_input[0] in COMMANDS['inventory']:
         player.open_inventory()
     elif user_input[0] in COMMANDS['move']:
@@ -43,9 +40,13 @@ def game_loop() -> bool:
         ...
         raise NotImplementedError
     elif user_input[0] in COMMANDS['unlock']:
-        # TODO: implement solution for unlocking containers
-        ...
-        raise NotImplementedError
+        container_name = user_input[1]
+        key_name = user_input[3]
+        container = player.find_item(container_name)
+        key = player.find_item(key_name)
+
+        player.unlock_with_key(key, container)
+
     elif user_input[0] in COMMANDS['inspect']:
         item_name = user_input[1]
         print(player.inspect_item(item_name))
