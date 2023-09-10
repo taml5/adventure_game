@@ -42,10 +42,8 @@ def game_loop() -> bool:
     elif user_input[0] in COMMANDS['unlock']:
         container_name = user_input[1]
         key_name = user_input[3]
-        container = player.find_item(container_name)
-        key = player.find_item(key_name)
 
-        player.unlock_with_key(key, container)
+        print(player.unlock_with_key(key_name, container_name))
 
     elif user_input[0] in COMMANDS['inspect']:
         item_name = user_input[1]

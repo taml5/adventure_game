@@ -52,7 +52,7 @@ class Container(Item):
     locked: Whether the container is locked and requires a key or not.
     key: An Item that, when used with the container, unlocks the container.
     """
-    contents: set[Item | 'Container']
+    contents: set[Item]
     locked: bool
     key: Optional[Item] = None
 
@@ -70,15 +70,15 @@ class Container(Item):
         tell the player.
         """
         if not self.contents:
-            return f'{self.description} It is empty.'
+            return f'It is empty.'
 
         contents_str = f'The {self.name.lower()} contains: \n'
         for item in self.contents:
-            if isinstance(item, Item):
+            if isinstance(item, Container):
                 contents_str += f'{item.name} \n'
-            else:  # isinstance(item, Container)
-                contents_str += f'{item.name}'
-                contents_str += item.display_contents()
+                contents_str += item.display_contents() + '\n'
+            else:
+                contents_str += f'{item.name} \n'
 
         return contents_str
 
@@ -91,11 +91,21 @@ class Container(Item):
         elif key.name == self.key.name:
             self.locked = False
             print(f'The {self.name.lower()} unlocks. \n')
-            self.display_contents()
-            return ''
+            return self.display_contents()
         else:
             return f'The key doesn\'t seem to fit.'
 
+    def search_for_item(self, item_name: str) -> tuple[Item, 'Container'] | None:
+        """Given the name of an item, search for the item within this container. If it is found, return
+        a tuple containing the item and the direct container containing it."""
+        for item in self.contents:
+            if item_name in item.keywords:
+                return (item, self)
+            elif isinstance(item, Container) and item.locked is False:
+                return item.search_for_item(item_name)
+
+        # if the item can't be found inside the container
+        return None
 
 ################################################################
 # ROOM
@@ -115,7 +125,7 @@ class Room(Container):
     description: str
     keywords: set[str]
     visited: bool
-    contents: set[Item | Container]
+    contents: set[Item]
     north: Optional['Room'] = None
     east: Optional['Room'] = None
     south: Optional['Room'] = None
@@ -169,38 +179,54 @@ class Player:
     inventory: A list of items that the player is holding.
     """
     location: Room
-    inventory: set[Item]
+    inventory: Container
 
     def __init__(self, location: Room) -> None:
         """Initialise a new Player instance."""
         self.location = location
-        self.inventory = set()
+        self.inventory = Container(name='inventory',
+                                   keywords={'inventory'},
+                                   description='The inventory of the player',
+                                   interactable=False,
+                                   portable=True,
+                                   contents=set(),
+                                   locked=False,)
 
-    def find_item(self, item_name: str) -> Item | None:
-        """Search for an item in the contents of the player's location. If found, return it.
-        Else, return None."""
-        for item in set.union(self.location.contents, self.inventory):
-            if item_name in item.keywords:
-                return item
+    def find_item(self, item_name: str) -> tuple[Item, Container] | None:
+        """Search for an item in the contents of the player's location. If found, return a tuple containing
+        the item and the direct container it is in. Otherwise, return None."""
+        # search for item in inventory
+        inventory_search = self.inventory.search_for_item(item_name)
+        if inventory_search is not None:
+            return inventory_search
+        # search for item in location
+        location_search = self.location.search_for_item(item_name)
+        if location_search is not None:
+            return location_search
 
-        return
+        # item not in location or inventory
+        return None
 
     def open_inventory(self) -> None:
         """Print out a list of items in the player's inventory."""
         print('You have:')
-        for item in self.inventory:
+        for item in self.inventory.contents:
             print(f'    {item.name}')
 
-    def unlock_with_key(self, key: Item, item: Item) -> str:
+    def unlock_with_key(self, key_name: str, item_name: str) -> str:
         """Attempt to unlock an Item with a key in the players inventory. If the key is in the player's inventory,
         attempt to unlock the container. If it isn't, tell the player and do nothing.
         """
-        if key in self.inventory:
+        # check if key is in the room
+        key = self.find_item(key_name)
+        if key is None:
+            return 'You don\'t have that key!'
+
+        find_item = self.find_item(item_name)
+        if find_item is not None:
+            item = find_item[0]
             if isinstance(item, Container):
-                self.location.contents = self.location.contents
-                return item.unlock_container(key)
-            else:
-                return 'You can\'t unlock that.'
+                return item.unlock_container(key[0])
         else:
             return 'You don\'t have that key!'
 
@@ -231,17 +257,18 @@ class Player:
         """Given the name of an item, search for the item in the player's location. If the item is found,
         place it into the player's inventory. If not, then tell the player and do nothing.
         """
-        # TODO: remove item from its container
-        item = self.find_item(item_name)
-        if item is None:
+        find_item = self.find_item(item_name)
+
+        if find_item is None:
             return 'I can\'t find that.'
-        elif item in self.inventory:
-            return 'You already have that.'
-        elif not item.portable:
+        elif find_item[1] is self.inventory:
+            return 'You already took that.'
+        elif not find_item[0].portable:
             return 'You can\'t take that!'
         else:
-            self.inventory.add(item)
-            self.location.contents.remove(item)
+            item, container = find_item
+            self.inventory.contents.add(item)
+            container.contents.remove(item)
             return f'Took {item.name.lower()}.'
 
     def inspect_item(self, item_name: str) -> str:
@@ -250,18 +277,17 @@ class Player:
         """
         if item_name.lower() in self.location.name.lower() or item_name == 'room':
             return self.location.description
-
-        item = self.find_item(item_name)
-        if item is None:
-            return 'I can\'t find that item.'
-        elif isinstance(item, Container):
-            string = f"""
-            {item.description} \n
-            {item.display_contents()}"""
-            return string
         else:
-            return item.description
+            find_item = self.find_item(item_name)
+            if find_item is None:
+                return 'I can\'t find that item.'
 
+            item = find_item[0]
+            if isinstance(item, Container) and item.locked is False:
+                string = f"""{item.description}\n\n{item.display_contents()}"""
+                return string
+            else:
+                return item.description
 
 ################################################################
 # TOP-LEVEL FUNCTIONS
