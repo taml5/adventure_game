@@ -3,12 +3,12 @@
 TODO: write module docstring
 """
 from entities.player import Player
+from entities.item import Container
 
 
-class Interactor:
+class GameInteractor:
     """..."""
     player: Player
-    # TODO: add controller
     # TODO: add presenter
 
     def __init__(self, player: Player) -> None:
@@ -30,8 +30,12 @@ class Interactor:
 
         location = self.player.location
         if location.contains(item_id):
-            self.player.add_item(location.pop_item(item_id))
-            return None
+            item = location.pop_item(item_id)
+            if isinstance(item, Container):  # different behaviour if item is a Container
+                return None
+            else:
+                self.player.add_item(item)
+                return None
         else:
             return None
 
