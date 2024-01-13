@@ -19,7 +19,7 @@ class Item:
 
 class Container(Item):
     """TODO: write docstring"""
-    _contents: dict[int: Item]
+    contents: dict[int: Item]
 
     def __init__(self, id: int):
         super().__init__(id)
