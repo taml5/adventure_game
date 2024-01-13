@@ -3,14 +3,14 @@
 
 class Item:
     """TODO: write docstring"""
-    id: int
+    item_id: int
     name: str
     description: str
     _interactable: bool
     _portable: bool
 
-    def __init__(self, id: int):
-        self.id = id
+    def __init__(self, item_id: int):
+        self.item_id = item_id
         self.name = ''
         self.description = ''
         self.interactable = False
@@ -21,6 +21,6 @@ class Container(Item):
     """TODO: write docstring"""
     contents: dict[int: Item]
 
-    def __init__(self, id: int):
-        super().__init__(id)
+    def __init__(self, item_id: int):
+        super().__init__(item_id)
         self._contents = {}

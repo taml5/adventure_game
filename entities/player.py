@@ -29,7 +29,7 @@ class Player:
                 self.add_item(container_item)
             return None
         else:
-            self.inventory[item.id] = item
+            self.inventory[item.item_id] = item
             return None
 
     def drop_item(self, item: Item) -> None:
@@ -38,8 +38,8 @@ class Player:
         Preconditions:
         - item in self.inventory
         """
-        self.inventory.pop(item.id)
-        self.location.contents[item.id] = Item
+        self.inventory.pop(item.item_id)
+        self.location.contents[item.item_id] = Item
 
     def has_item(self, item_id: int) -> bool:
         """Returns if the player has the item."""

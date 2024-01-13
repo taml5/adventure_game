@@ -19,7 +19,7 @@ class Room:
 
     def add_item(self, item: Item) -> None:
         """Adds an item to the contents of the room."""
-        self.contents[item.id] = item
+        self.contents[item.item_id] = item
 
     def pop_item(self, item_id: int) -> Item:
         """Remove an item from the contents of the room and return it."""
