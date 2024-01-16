@@ -20,17 +20,10 @@ class Player:
         self.inventory = {}
 
     def add_item(self, item: Item) -> None:
-        """Add an item into the player's inventory. If the item is a container, then recursively add its
-        items into the player's inventory.
+        """Add an item into the player's inventory.
         """
-        if isinstance(item, Container):
-            # output something here about the container
-            for container_item in item.contents.values:
-                self.add_item(container_item)
-            return None
-        else:
-            self.inventory[item.item_id] = item
-            return None
+        self.inventory[item.item_id] = item
+        return None
 
     def drop_item(self, item: Item) -> None:
         """Remove an item from the player's inventory, and add it to the room.
