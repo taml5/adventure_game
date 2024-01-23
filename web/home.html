@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adventure Game</title>
+    <link href="./style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="main">
+        <div id="outputPort">
+            <div id="outputs">
+                <div>
+                    <p>WELCOME TO *ADVENTURE GAME* (WIP!!)
+                        <br>
+                        TYPE help FOR VALID COMMANDS
+                        <br>
+                        ---------------------------------------------------------------------------------------
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="inputPort">
+            <div id="prompt">
+                <p>$</p>
+            </div>
+            <div id="commandArea">
+                <form id="form">
+                    <input type="text" id="command" autofocus onfocus="this.select()">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById("form");
+        const command = document.getElementById("command");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            addElement(command.value);
+            form.reset();
+
+            // execute game command
+        })
+
+        function addElement(text) {
+            const output = document.getElementById('outputs');
+
+            // Create some element, e.g. div
+            const newElement = document.createElement('div');
+            newElement.setAttribute('id', "some-id-for-new-element");
+
+            newElement.innerHTML = text;
+
+            output.appendChild(newElement);
+        }
+    </script>
+</body>
+</html>
