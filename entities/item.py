@@ -15,21 +15,35 @@ class Item:
     description: str
     portable: bool
 
-    def __init__(self, item_id: int):
+    def __init__(self, item_id: int, name: str, description: str, interactable: bool, portable: bool):
         self.item_id = item_id
-        self.name = ''
-        self.description = ''
-        self.interactable = False
-        self.portable = False
+        self.name = name
+        self.description = description
+        self.interactable = interactable
+        self.portable = portable
 
 
 class Container(Item):
     """An item that can contain other items.
 
     contents: items that the Container contains, represented as a dictionary mapping from item_id to the Item.
+    locked: whether the Container is locked or not.
+    key: the corresponding key if the Container is locked; otherwise None.
     """
     contents: dict[int: Item]
+    locked: bool
+    key: Item | None
 
-    def __init__(self, item_id: int):
-        super().__init__(item_id)
-        self._contents = {}
+    def __init__(self, item_id: int,
+                 name: str,
+                 description: str,
+                 interactable: bool,
+                 locked: bool,
+                 key: Item | None = None):
+        super().__init__(item_id, name, description, interactable, False)
+        self.contents = {}
+        self.locked = locked
+        self.key = key
+
+    def insert_item(self, item: Item):
+        self.contents[item.item_id] = item
