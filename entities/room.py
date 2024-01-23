@@ -9,7 +9,14 @@ DIRECTIONS = {"north": "south", "east": "west", "south": "north", "west": "east"
 
 
 class Room:
-    """TODO: write docstring"""
+    """A room that the player can traverse and interact with.
+
+    name: the name of the room.
+    description: a description of the room.
+    visited: whether if the player has already visited this room or not.
+    contents: a dictionary of item ids and the item that it contains.
+    neighbours: a dictionary of directions and a connected room in that direction that the player can move to.
+    """
     name: str
     description: str
     visited: bool
