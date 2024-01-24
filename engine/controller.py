@@ -1,6 +1,8 @@
 """Interprets player input into valid input data for the GameInteractor."""
 from engine.gameinteractor import GameInteractor
 
+VALID_COMMANDS = {'help', 'look', 'go'}  # TODO: define allowed commands
+
 
 class Controller:
     """Interprets player input into valid input data for the GameInteractor.
@@ -8,17 +10,52 @@ class Controller:
     interactor: the game interactor.
     """
     interactor: GameInteractor
-    item_ids: dict[str: int]
 
-    def __int__(self, interactor: GameInteractor, item_ids: dict[str: int]):
+    def __init__(self, interactor: GameInteractor):
         self.interactor = interactor
-        self.item_ids = item_ids
 
-    def item_id(self, item_name: str) -> int:
-        """Given the name of an item, return its item_id.
-
-        Precondition:
-        - item_name is a valid name of an existing item.
+    def parse_input(self, user_input: str) -> list[str] | None:
+        """Given an input string by the player, parse it and execute the associated
+        command.
         """
-        item_name = item_name.strip().lower()
-        return self.item_ids.get(item_name)
+        words = user_input.lower().strip().split()
+
+        if len(words) < 1:
+            return self.interactor.handle_invalid_event()
+        elif words[0] in VALID_COMMANDS:
+            return self.parse_command(words)
+        else:
+            return self.interactor.handle_invalid_event()
+
+    def parse_command(self, words: list[str]) -> list[str] | None:
+        """Given a valid command, process the given words and execute the corresponding
+        GameInteractor method.
+        TODO: finish handling for each interaction
+
+        Preconditions:
+         - len(words) >= 1
+         - words[0] in VALID_COMMANDS
+        """
+        verb = words[0]
+
+        if verb == 'help':
+            return self.interactor.get_help()
+        elif verb == 'inventory':
+            ...
+        elif verb == 'look':
+            return self.interactor.describe_room()
+        elif len(words) > 1:
+            if verb == 'go':
+                return self.interactor.move_rooms(words[1])
+            elif verb == 'take':
+                ...
+            elif verb == 'drop':
+                ...
+            elif verb == 'open':
+                ...
+            elif verb == 'inspect':
+                ...
+            elif verb == 'use':
+                ...
+        else:
+            self.interactor.handle_invalid_event()
