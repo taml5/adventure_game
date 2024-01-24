@@ -2,7 +2,7 @@
 
 Initialises all the required classes, loads the needed data, and prepares the presenter."""
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(import_name=__name__)
 
@@ -11,6 +11,17 @@ app = Flask(import_name=__name__)
 def index():
     """Render the main html webpage on the server."""
     return render_template('index.html')
+
+
+@app.route('/execute_command', methods=['POST'])
+def execute_command() -> dict[str: str]:
+    """Process and attempt to execute the given command via the GameInteractor"""
+    if request.method == 'POST':
+        command = request.get_json()['input']
+        # TODO: connect game engine to the call
+        return f"EXECUTE COMMAND '{command}'"
+    else:
+        return "ERROR: BAD REQUEST"
 
 
 if __name__ == "__main__":
