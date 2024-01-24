@@ -8,51 +8,47 @@ from entities.item import Item, Container
 ################################################################
 
 # test_room1
-test_key = Item(item_id=hash('Key1'))
-test_key.set_attributes(name='Rusty Key',
-                        description='The key is old and rusted.',
-                        portable=True,
-                        interactable=True
-                        )
-test_item1 = Item(item_id=hash('Sword'))
-test_item1.set_attributes(name='Sword',
-                          description='A one-handed sword made of bronze, forged in a bygone era by an ancient '
-                                      'civilisation. It\'s still sharp.',
-                          portable=True,
-                          interactable=True
-                          )
-test_chest = Container(hash('chest1'))
-test_chest.set_attributes(name='Old Chest',
-                          description='The chest is ancient: the wood is rotted and covered in moss. '
-                                      'Yet, the lock still holds firm.',
-                          portable=False,
-                          interactable=True
-                          )
-test_chest.container_attributes(locked=True,
-                                key=test_key,
-                                contents={test_item1})
+TEST_KEY = Item(name='Rusty Key',
+                item_id=hash('Key1'),
+                description='The key is old and rusted.',
+                portable=True,
+                interactable=True,
+                )
+TEST_ITEM1 = Item(name='Sword',
+                  item_id=hash('Sword'),
+                  description='A one-handed sword made of bronze, forged in a bygone era by an ancient '
+                              'civilisation. It\'s still sharp.',
+                  portable=True,
+                  interactable=True
+                  )
+TEST_CHEST = Container(name='Old Chest',
+                       item_id=hash('chest1'),
+                       description='The chest is ancient: the wood is rotted and covered in moss. '
+                                   'Yet, the lock still holds firm.',
+                       interactable=True,
+                       locked=True
+                       )
+TEST_CHEST.insert_item(TEST_ITEM1)
 
 # test_room2
-test_item2 = Item(hash('pendant1'))
-test_item2.set_attributes(name='Ruby Pendant',
-                          description='A pendant of gold with a large ruby inlaid in the middle. The gold is dull, '
-                                      'but the ruby still shines brightly despite the dim light in the room.',
-                          portable=True,
-                          interactable=True
-                          )
+TEST_ITEM2 = Item(name='Ruby Pendant',
+                  item_id=hash('Ruby Pendant'),
+                  description='A pendant of gold with a large ruby inlaid in the middle. The gold is dull, '
+                              'but the ruby still shines brightly despite the dim light in the room.',
+                  portable=True,
+                  interactable=True
+                  )
 
 ################################################################
 # ROOMS
 ################################################################
 
-test_room1 = Room()
-test_room1.name = 'Test Room'
-test_room1.description = 'This is a test room. There is a rusty key and a chest.',
-test_room1.add_item(test_key)
-test_room1.add_item(test_chest)
+TEST_ROOM1 = Room(name='Test Room',
+                  description='This is a test room. There is a rusty key and a chest.',)
+TEST_ROOM1.add_item(TEST_KEY)
+TEST_ROOM1.add_item(TEST_CHEST)
 
-test_room2 = Room()
-test_room2.name = 'Secret Room'
-test_room2.description = 'This is another room connected to the main room. There is a pendant lying on the floor.'
-test_room2.add_item(test_item2)
-test_room2.add_neighbour(test_room1, 'south')
+TEST_ROOM2 = Room(name='Secret Room',
+                  description='This is another room connected to the main room. There is a pendant lying on the floor.')
+TEST_ROOM2.add_item(TEST_ITEM2)
+TEST_ROOM2.add_neighbour(TEST_ROOM1, 'south')
