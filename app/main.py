@@ -18,8 +18,13 @@ controller = game_factory.initialise()
 @app.route('/')
 def index():
     """Render the main html webpage on the server."""
-    room_text = controller.parse_input("look")
-    return render_template('index.html', room_name=room_text[0], room_desc=room_text[1])
+    return render_template('index.html')
+
+
+@app.route('/on_load', methods=['POST'])
+def on_load():
+    """Render API text on page load."""
+    return jsonify(controller.parse_input("look"))
 
 
 @app.route('/execute_command', methods=['POST'])

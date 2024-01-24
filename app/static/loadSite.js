@@ -1,6 +1,17 @@
 const form = document.getElementById("form");
 const command = document.getElementById("command");
 
+document.addEventListener('DOMContentLoaded', function() {
+      executeCommand("look", '/on_load').then(r => {
+          const commands = eval(r)
+
+        for (const command of commands) {
+            addElement(command);
+        }
+      });
+});
+
+
 form.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -9,7 +20,7 @@ form.addEventListener("submit", function (e) {
     form.reset();
 
     // execute game command
-    executeCommand(userInput).then(r => {
+    executeCommand(userInput, '/execute_command').then(r => {
         const commands = eval(r)
 
         for (const command of commands) {
@@ -18,7 +29,7 @@ form.addEventListener("submit", function (e) {
     });
 })
 
-async function executeCommand(userInput) {
+async function executeCommand(userInput, url) {
     const data = {
         input: userInput
     };
@@ -28,7 +39,7 @@ async function executeCommand(userInput) {
         body: JSON.stringify(data)
     };
     try {
-        const response = await fetch('/execute_command', requestOptions);
+        const response = await fetch(url, requestOptions);
         return await response.text();
     } catch (e) {
         addElement(`ERROR: ${e}`)
