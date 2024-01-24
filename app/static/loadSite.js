@@ -9,7 +9,7 @@ form.addEventListener("submit", function (e) {
     form.reset();
 
     // execute game command
-    executeCommand(userInput)
+    executeCommand(userInput).then(r => addElement(r))
 })
 
 async function executeCommand(userInput) {
@@ -21,9 +21,12 @@ async function executeCommand(userInput) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
     };
-    const response = await fetch('/execute_command', requestOptions);
-    const output = await response.text();
-    addElement(output);
+    try {
+        const response = await fetch('/execute_command', requestOptions);
+        return await response.text();
+    } catch (e) {
+        addElement(`ERROR: ${e}`)
+    }
 }
 
 function addElement(text) {
