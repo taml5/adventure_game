@@ -48,7 +48,7 @@ class Room:
         return self.contents.pop(item_id)
 
     def add_neighbour(self, neighbour: 'Room', direction: str) -> None:
-        """Add a neighbour to this room.
+        """Attach a neighbour to this room.
 
         Preconditions
         - direction in DIRECTIONS
@@ -57,6 +57,14 @@ class Room:
         """
         self.neighbours[direction] = neighbour
         neighbour.neighbours[DIRECTIONS[direction]] = self
+
+    def add_neighbours(self, neighbours: dict['Room': str]) -> None:
+        """Attach a collection of neighbours to this room.
+
+        Preconditions: all of add_neighbour's preconditiosn hold for each of neighbours
+        """
+        for room in neighbours:
+            self.add_neighbour(room, neighbours[room])
 
     def add_interaction(self, interaction: Interaction) -> None:
         """Add an interaction that takes place in this room."""
