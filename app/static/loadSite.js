@@ -9,7 +9,13 @@ form.addEventListener("submit", function (e) {
     form.reset();
 
     // execute game command
-    executeCommand(userInput).then(r => addElement(r))
+    executeCommand(userInput).then(r => {
+        const commands = eval(r)
+
+        for (const command of commands) {
+            addElement(command);
+        }
+    });
 })
 
 async function executeCommand(userInput) {
