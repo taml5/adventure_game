@@ -6,6 +6,7 @@ and a message is returned that informs the player of what happened.
 
 TODO: figure out interactions and how to execute them
 """
+from typing import Callable
 from abc import ABC, abstractmethod
 
 from entities.item import Item
@@ -15,19 +16,21 @@ class Interaction(ABC):
     """An abstract class that represents an arbitrary interaction between the player,
     the item, and the environment.
 
-    item1: the item that is used in order to initiate this interaction.
+    key_item: the item that is used in order to initiate this interaction.
+    interaction: a function that defines the interaction.
     """
-    item1: Item
+    key_item: Item
+    interaction: Callable
 
-    def __int__(self, item1: Item):
-        self.item1 = item1
+    def __int__(self, item1: Item, interaction: Callable):
+        self.key_item = item1
+        self.interaction = interaction
 
     def __contains__(self, item):
-        return self.item1 is item
+        # use is since there should be no duplicates of items
+        return self.key_item is item
 
     @abstractmethod
-    def execute_interaction(self) -> str:
-        """Execute the interaction by modifying the game environment and return a
-        message describing the interaction that took place.
-        """
+    def execute_interaction(self):
+        """Execute the interaction."""
         raise NotImplementedError
