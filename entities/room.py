@@ -27,7 +27,7 @@ class Room:
     neighbours: dict[str: 'Room']
     interactions: set[Interaction]
 
-    def __int__(self, name: str, description: str):
+    def __init__(self, name: str, description: str):
         self.name = name
         self.description = description
         self.visited = False
