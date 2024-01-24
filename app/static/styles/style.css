@@ -31,10 +31,11 @@ body {
 
     display: flex;
     align-items: baseline;
+    gap: 2rem;
+    justify-content: flex-start;
 }
 #prompt {
-    flex-grow: 1;
-    flex-basis: 0.5%;
+    flex: none;
 }
 #commandArea {
     flex-grow: 20;
