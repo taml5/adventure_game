@@ -1,4 +1,5 @@
 """Defines the item entity and its subclasses."""
+from typing import Iterable
 
 
 class Item:
@@ -32,18 +33,21 @@ class Container(Item):
     """
     contents: dict[int: Item]
     locked: bool
-    key: Item | None
 
     def __init__(self, item_id: int,
                  name: str,
                  description: str,
                  interactable: bool,
-                 locked: bool,
-                 key: Item | None = None):
+                 locked: bool):
         super().__init__(item_id, name, description, interactable, False)
         self.contents = {}
         self.locked = locked
-        self.key = key
 
-    def insert_item(self, item: Item):
+    def insert_item(self, item: Item) -> None:
+        """Insert the given item into the Container."""
         self.contents[item.item_id] = item
+
+    def insert_items(self, items: Iterable[Item]) -> None:
+        """Insert the given items into the Container."""
+        for item in items:
+            self.insert_item(item)
