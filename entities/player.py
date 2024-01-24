@@ -1,6 +1,6 @@
 """The player that is controlled by the user and interacts with the world.
 """
-from entities.item import Item, Container
+from entities.item import Item
 from entities.room import Room
 
 
@@ -20,8 +20,7 @@ class Player:
         self.inventory = {}
 
     def add_item(self, item: Item) -> None:
-        """Add an item into the player's inventory.
-        """
+        """Add an item into the player's inventory."""
         self.inventory[item.item_id] = item
         return None
 
