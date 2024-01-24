@@ -6,26 +6,28 @@ are two defined endpoints:
  - the route '/execute_command' defines a POST request where the webpage provides a command in JSON format.
    The game engine processes the command and returns a string.
 """
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from markupsafe import escape
 
+import game_factory
+
 app = Flask(import_name=__name__)
-# TODO: write and add GameFactory to initialise game
+controller = game_factory.initialise()
+
 
 @app.route('/')
 def index():
     """Render the main html webpage on the server."""
-    return render_template('index.html')
+    room_text = controller.parse_input("look")
+    return render_template('index.html', room_name=room_text[0], room_desc=room_text[1])
 
 
 @app.route('/execute_command', methods=['POST'])
-def execute_command() -> str:
+def execute_command():
     """Process and attempt to execute the given command via the GameInteractor"""
     if request.method == 'POST':
         command = escape(request.get_json()['input'])
-        # TODO: connect game engine to the call
-        return f"EXECUTE COMMAND '{command}'"
+        return jsonify(controller.parse_input(command))
     else:
         return "ERROR: BAD REQUEST"
 
