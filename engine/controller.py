@@ -27,7 +27,7 @@ class Controller:
         else:
             return self.interactor.handle_invalid_event()
 
-    def parse_command(self, words: list[str]) -> list[str] | None:
+    def parse_command(self, words: list[str]) -> list[str]:
         """Given a valid command, process the given words and execute the corresponding
         GameInteractor method.
         TODO: finish handling for each interaction
@@ -58,4 +58,4 @@ class Controller:
             elif verb == 'use':
                 ...
         else:
-            self.interactor.handle_invalid_event()
+            return self.interactor.handle_invalid_event()
