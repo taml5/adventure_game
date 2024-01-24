@@ -4,13 +4,12 @@ const command = document.getElementById("command");
 form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const userInput = command.value;
+    const userInput = command.value
     addElement(userInput);
     form.reset();
 
     // execute game command
-    const output = executeCommand(userInput);
-    addElement(output);
+    executeCommand(userInput)
 })
 
 async function executeCommand(userInput) {
@@ -23,7 +22,8 @@ async function executeCommand(userInput) {
         body: JSON.stringify(data)
     };
     const response = await fetch('/execute_command', requestOptions);
-    return await response.text();
+    const output = await response.text();
+    addElement(output);
 }
 
 function addElement(text) {
