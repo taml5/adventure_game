@@ -14,7 +14,7 @@ def index():
 
 
 @app.route('/execute_command', methods=['POST'])
-def execute_command() -> dict[str: str]:
+def execute_command() -> str:
     """Process and attempt to execute the given command via the GameInteractor"""
     if request.method == 'POST':
         command = request.get_json()['input']
