@@ -85,7 +85,7 @@ class GameInteractor:
     def describe_room(self) -> list[str]:
         """Return the description of the room."""
         if self.player.location.visited:
-            return [self.player.location.description]
+            return [self.player.location.name]
         else:
             self.player.location.visited = True
             return [self.player.location.name, self.player.location.description]
