@@ -4,18 +4,33 @@ const command = document.getElementById("command");
 form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    addElement(command.value);
+    const userInput = command.value;
+    addElement(userInput);
     form.reset();
 
     // execute game command
+    const output = executeCommand(userInput);
+    addElement(output);
 })
+
+async function executeCommand(userInput) {
+    const data = {
+        input: userInput
+    };
+    const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    };
+    const response = await fetch('/execute_command', requestOptions);
+    return await response.text();
+}
 
 function addElement(text) {
     const output = document.getElementById('outputs');
 
-    // Create some element, e.g. div
     const newElement = document.createElement('div');
-    newElement.setAttribute('id', "some-id-for-new-element");
+    newElement.setAttribute("class", "output");
 
     newElement.innerHTML = text;
 
