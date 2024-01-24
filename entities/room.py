@@ -23,9 +23,9 @@ class Room:
     contents: dict[int: Item]
     neighbours: dict[str: 'Room']
 
-    def __int__(self):
-        self.name = ''
-        self.description = ''
+    def __int__(self, name: str, description: str):
+        self.name = name
+        self.description = description
         self.visited = False
         self.contents = {}
         self.neighbours = {}
