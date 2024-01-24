@@ -37,20 +37,21 @@ body {
     flex: none;
 }
 #commandArea {
-    flex-grow: 20;
+    flex-shrink: 3;
     justify-content: left;
-
-    display: flex
+    width: 90vw;
+    display: flex;
 }
 #form {
     padding-top: 1rem;
+    width: 100%
 }
 input[type=text] {
     background-color: black;
     color: white;
     font-family: 'VT323', monospace;
     border: none;
-    width: 90vw;
+    width: 100%;
     outline: none;
     font-size: 20pt;
 }
