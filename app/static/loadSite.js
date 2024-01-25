@@ -2,13 +2,13 @@ const form = document.getElementById("form");
 const command = document.getElementById("command");
 
 document.addEventListener('DOMContentLoaded', function() {
-      executeCommand("look", '/on_load').then(r => {
-          const commands = eval(r)
+    executeCommand("look", '/on_load').then(r => {
+        const commands = eval(r)
 
         for (const command of commands) {
             addElement(command);
         }
-      });
+    });
 });
 
 
