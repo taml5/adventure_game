@@ -1,7 +1,7 @@
 """Interprets player input into valid input data for the GameInteractor."""
 from engine.gameinteractor import GameInteractor
 
-VALID_COMMANDS = {'help', 'go'}  # TODO: define allowed commands
+VALID_COMMANDS = {'help', 'go', 'inventory'}  # TODO: define allowed commands
 
 
 class Controller:
@@ -41,7 +41,7 @@ class Controller:
         if verb == 'help':
             return self.interactor.get_help()
         elif verb == 'inventory':
-            ...
+            return self.interactor.open_inventory()
         elif len(words) > 1:
             if verb == 'go':
                 return self.interactor.move_rooms(words[1])

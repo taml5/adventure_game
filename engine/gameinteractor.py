@@ -24,6 +24,18 @@ class GameInteractor:
         """
         return ["Good luck!"]
 
+    def open_inventory(self) -> list[str]:
+        """Return a list of the item names that are in the player's inventory. If it is empty, return a message
+        informing the player that they are holding no items.
+        """
+        if len(self.player.inventory) == 0:
+            return ["You aren't carrying anything."]
+        else:
+            output = []
+            for item in self.player.inventory.values():
+                output.append(item.name)
+            return output
+
     def announce_room(self) -> list[str]:
         """Return the name of the room. If it is the first time visiting this room, return the description
         of the room as well.
