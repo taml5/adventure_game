@@ -24,7 +24,7 @@ def index():
 @app.route('/on_load', methods=['POST'])
 def on_load():
     """Render API text on page load."""
-    return jsonify(controller.parse_input("look"))
+    return jsonify(controller.announce_room())
 
 
 @app.route('/execute_command', methods=['POST'])

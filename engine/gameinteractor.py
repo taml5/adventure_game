@@ -17,13 +17,30 @@ class GameInteractor:
     def __init__(self, player: Player) -> None:
         self.player = player
 
+    def get_help(self) -> list[str]:
+        """Return the help command.
+
+        TODO: write a better help response
+        """
+        return ["Good luck!"]
+
+    def announce_room(self) -> list[str]:
+        """Return the name of the room. If it is the first time visiting this room, return the description
+        of the room as well.
+        """
+        if self.player.location.visited:
+            return [self.player.location.name]
+        else:
+            self.player.location.visited = True
+            return [self.player.location.name, self.player.location.description]
+
     def move_rooms(self, direction: str) -> list[str]:
         """Attempt to move the player into a neighbouring room."""
         neighbouring_rooms = self.player.location.neighbours
         if direction in neighbouring_rooms:
             self.player.location = neighbouring_rooms[direction]
             if not self.player.location.visited:
-                return self.describe_room()
+                return self.announce_room()
             else:
                 return [self.player.location.name]
         else:
@@ -61,13 +78,6 @@ class GameInteractor:
         else:
             return [f"You don't have that."]
 
-    def get_help(self) -> list[str]:
-        """Return the help command.
-
-        TODO: write a better help response
-        """
-        return ["Good luck!"]
-
     def handle_invalid_event(self) -> list[str]:
         """Return a string informing the player that they have entered an invalid command."""
         return ["I don't know you're trying to say."]
@@ -81,11 +91,3 @@ class GameInteractor:
             return (self.player.location.contents[item_id], False)
         else:
             return None, None
-
-    def describe_room(self) -> list[str]:
-        """Return the description of the room."""
-        if self.player.location.visited:
-            return [self.player.location.name]
-        else:
-            self.player.location.visited = True
-            return [self.player.location.name, self.player.location.description]

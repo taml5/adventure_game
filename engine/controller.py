@@ -1,7 +1,7 @@
 """Interprets player input into valid input data for the GameInteractor."""
 from engine.gameinteractor import GameInteractor
 
-VALID_COMMANDS = {'help', 'look', 'go'}  # TODO: define allowed commands
+VALID_COMMANDS = {'help', 'go'}  # TODO: define allowed commands
 
 
 class Controller:
@@ -42,8 +42,6 @@ class Controller:
             return self.interactor.get_help()
         elif verb == 'inventory':
             ...
-        elif verb == 'look':
-            return self.interactor.describe_room()
         elif len(words) > 1:
             if verb == 'go':
                 return self.interactor.move_rooms(words[1])
@@ -59,3 +57,9 @@ class Controller:
                 ...
         else:
             return self.interactor.handle_invalid_event()
+
+    def announce_room(self) -> list[str]:
+        """Call the appropriate GameInteractor function to return the name and description of the room
+        when first initialising the game.
+        """
+        return self.interactor.announce_room()
