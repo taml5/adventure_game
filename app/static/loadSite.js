@@ -2,12 +2,8 @@ const form = document.getElementById("form");
 const command = document.getElementById("command");
 
 document.addEventListener('DOMContentLoaded', function() {
-    executeCommand("look", '/on_load').then(r => {
-        const commands = eval(r)
-
-        for (const command of commands) {
-            addElement(command);
-        }
+    executeCommand("look", '/on_load').then(commands => {
+        commands.forEach((command) => {addElement(command)});
     });
 });
 
@@ -40,7 +36,7 @@ async function executeCommand(userInput, url) {
     };
     try {
         const response = await fetch(url, requestOptions);
-        return await response.text();
+        return await response.json();
     } catch (e) {
         addElement(`ERROR: ${e}`)
     }
