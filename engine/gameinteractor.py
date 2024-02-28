@@ -36,6 +36,10 @@ class GameInteractor:
                 output.append(item.name)
             return output
 
+    def describe_room(self) -> list[str]:
+        """Return the description of the room."""
+        return [self.player.location.description]
+
     def announce_room(self) -> list[str]:
         """Return the name of the room. If it is the first time visiting this room, return the description
         of the room as well.
