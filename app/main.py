@@ -21,7 +21,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/on_load', methods=['POST'])
+@app.route('/on_load', methods=['GET'])
 def on_load():
     """Render API text on page load."""
     return jsonify(controller.announce_room())
