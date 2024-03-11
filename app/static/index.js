@@ -2,7 +2,7 @@ const form = document.getElementById("form");
 const command = document.getElementById("command");
 
 document.addEventListener('DOMContentLoaded', function() {
-    executeCommand("look", '/on_load').then(commands => {
+    getStartingInfo("/on_load").then(commands => {
         commands.forEach((command) => {addElement(command)});
     });
 });
@@ -25,6 +25,19 @@ form.addEventListener("submit", function (e) {
     });
 })
 
+async function getStartingInfo(url) {
+    const requestOptions = {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+    };
+    try {
+        const response = await fetch(url, requestOptions);
+        return await response.json();
+    } catch (e) {
+        addElement(`ERROR: ${e}`);
+    }
+}
+
 async function executeCommand(userInput, url) {
     const data = {
         input: userInput
@@ -38,7 +51,7 @@ async function executeCommand(userInput, url) {
         const response = await fetch(url, requestOptions);
         return await response.json();
     } catch (e) {
-        addElement(`ERROR: ${e}`)
+        addElement(`ERROR: ${e}`);
     }
 }
 
